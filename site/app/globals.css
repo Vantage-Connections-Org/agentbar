@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+/* One palette, both themes. Accent = AgentBar's "done" green. */
+:root {
+  --bg: #f6f7f5;
+  --surface: #ffffff;
+  --surface-2: #eef0ec;
+  --line: #dde1da;
+  --text: #16181a;
+  --muted: #555c62;
+  --accent: #1f7a4c;
+  --accent-ink: #ffffff;
+  --accent-soft: #e0efe6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e0f11;
+    --surface: #16181b;
+    --surface-2: #1d2024;
+    --line: #2a2e33;
+    --text: #eceef0;
+    --muted: #9aa1a8;
+    --accent: #4ade80;
+    --accent-ink: #0b2415;
+    --accent-soft: #163a24;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

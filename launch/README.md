@@ -1,0 +1,79 @@
+# AgentBar launch kit
+
+Drafts only. Nothing in this folder has been posted anywhere.
+
+| File | For |
+|---|---|
+| `show-hn.md` | Hacker News: title + maker's first comment |
+| `reddit.md` | r/ClaudeAI, r/ChatGPTCoding, r/windows, r/opensource |
+| `x-thread.md` | 6-post X thread |
+| `product-hunt.md` | Name, tagline, description, first comment, gallery |
+
+## Before posting anything
+
+- [ ] Replace every `{{SITE_URL}}` with the real landing page URL (`grep -rn "{{SITE_URL}}" launch/`).
+- [ ] Repo is public and the README renders with all four `docs/` images.
+- [ ] Fresh-machine test of the README install: `git clone`, `.\install.ps1 -StartWithWindows`, a Claude Code chat and a Codex chat both show up, click-to-focus works. Launch traffic will hit the install first.
+- [ ] Decide on a prebuilt `AgentBar.exe` in GitHub Releases. Right now every draft says "build from source with the .NET 8 SDK". If you add a release, update that line in all four files.
+- [ ] Record the GIF for X post 1 (a square going orange to green, then a click bringing the window forward). No GIF exists in `docs/` yet.
+- [ ] Pad the `docs/` screenshots for Product Hunt (see "Images" below).
+- [ ] Re-read each subreddit's rules and flair requirements on the day.
+- [ ] Re-check every claim against the README if the code changed since 2026-09-18 (the drafts were written from the README and `src/Discovery.cs` at commit `57353b2`).
+- [ ] macOS wording: all drafts say "in progress". Don't change it to "available" until it ships.
+- [ ] Block out 3–4 hours after each post to answer comments. HN and Reddit both reward fast, specific replies from the maker.
+
+## Order and timing
+
+Stagger the launches so you can answer each one. A suggested order:
+
+1. **Show HN**, day 1.
+2. **r/ClaudeAI** and **r/ChatGPTCoding**, day 1 or 2, a few hours apart.
+3. **X thread**, same day as Show HN (link the HN post in a reply if it gets traction).
+4. **r/opensource**, day 3.
+5. **r/windows**, day 3 or 4, only if the rules allow project posts.
+6. **Product Hunt**, a separate day once the landing page and padded gallery images are ready.
+
+Best times to post (common rules of thumb, not measured for this project):
+
+| Where | When (US Pacific) | Why |
+|---|---|---|
+| Show HN | Tue–Thu, 6–9 am PT | New posts get seen while both US coasts and Europe are online |
+| Reddit | Tue–Thu, 6–9 am PT | Same overlap; avoid Friday evening and weekends for dev subs |
+| X | Weekday, 8–10 am PT | Morning US timeline |
+| Product Hunt | 12:01 am PT on a Tue–Thu | PH's daily ranking resets at midnight PT, so launching then gives a full 24 h |
+
+Avoid launch days that clash with a big Claude Code or Codex release, since those subs fill up with release threads.
+
+## Images: which file goes where
+
+All in `docs/`. Actual sizes: `taskbar.png` 804x157, `closeup.png` 1095x168, `hover-card.png` 1140x410, `icon.png` 256x256.
+
+| Where | Image | Notes |
+|---|---|---|
+| Show HN | none | HN is text-only; the repo README carries the images |
+| r/ClaudeAI | `taskbar.png` | Or a text post with the repo link |
+| r/ChatGPTCoding | `closeup.png` | Shows both the Claude and Codex logos |
+| r/windows | `taskbar.png` | Shows it sitting in the real Windows 11 taskbar |
+| r/opensource | `closeup.png` (optional) | Text post is fine here |
+| X post 1 | GIF (to record) | Fallback: `taskbar.png` |
+| X post 2 | `hover-card.png` | |
+| X post 3 | `closeup.png` | |
+| Product Hunt thumbnail | `icon.png` | |
+| Product Hunt gallery 1/2/3 | `taskbar.png`, `closeup.png`, `hover-card.png` | Pad each onto a 1270x760 dark canvas first |
+
+The two taskbar strips are very wide and short (about 5:1 and 6.5:1). X and Reddit crop previews toward 16:9, so they'll either show as a thin band or get cut. Padding them onto a 16:9 dark canvas, or cropping to the squares plus a bit of taskbar, will read better in feeds.
+
+## Facts the drafts rely on (all from README.md / src)
+
+Keep replies in comments inside these lines too.
+
+- Windows 10/11, taskbar at the bottom of the primary monitor. macOS menu-bar version: in progress.
+- Free, MIT, © 2026 Vantage Connections. Not affiliated with Anthropic or OpenAI.
+- No API keys, no network. Reads Claude Code's and Codex's own session files; never modifies them.
+- ~330 KB single exe, C# / WPF / .NET 8, built from source via `install.ps1`.
+- Rescans every 800 ms (`BarWindow.cs`).
+- Optional Node hook writes to `~/.claude/agent-status/` and adds current step + blue "needs an answer".
+- Click focuses the host window, not the terminal tab.
+- Session files aren't public APIs; upstream changes can break discovery.
+
+Do not add user counts, star counts, testimonials, or performance numbers that haven't been measured.

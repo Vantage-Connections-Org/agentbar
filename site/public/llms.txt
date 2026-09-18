@@ -1,0 +1,14 @@
+# AgentBar
+
+> AgentBar is a free, open-source (MIT) Windows 10/11 app that shows every running Claude Code and OpenAI Codex CLI chat as a small status square in the Windows taskbar, next to the system tray.
+
+- Status is shown by each square's background: working (dull orange), done and waiting on you (green), needs an answer (blue), idle (collapses to a thin bar).
+- Each square's border is the chat's own colour (Claude Code's /color), so chats are easy to tell apart.
+- Clicking a square brings that chat's window (Zed, Windows Terminal, VS Code, Cursor, and others) to the front.
+- It reads only local files the tools already keep (~/.claude/sessions, ~/.claude/projects, ~/.codex). No API keys, no network requests, never modifies those files.
+- Install: clone https://github.com/Vantage-Connections-Org/agentbar and run install.ps1 (requires the .NET 8 SDK).
+- A macOS menu bar version is in progress (not yet available).
+
+## Links
+- [Source code and README](https://github.com/Vantage-Connections-Org/agentbar)
+- [Report an issue](https://github.com/Vantage-Connections-Org/agentbar/issues)

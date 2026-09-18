@@ -1,0 +1,52 @@
+name: mac
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "mac/**"
+      - ".github/workflows/mac.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-14
+    defaults:
+      run:
+        shell: bash
+        working-directory: mac
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: swift --version
+
+      - name: Build and package AgentBar.app
+        id: package
+        run: bash build-app.sh
+
+      - name: Verify bundle
+        run: |
+          set -euo pipefail
+          test -f build/AgentBar.app/Contents/Info.plist
+          test -x build/AgentBar.app/Contents/MacOS/AgentBar
+          test -s build/AgentBar-mac.zip
+          lipo -info build/AgentBar.app/Contents/MacOS/AgentBar
+          /usr/libexec/PlistBuddy -c "Print :LSUIElement" build/AgentBar.app/Contents/Info.plist | grep -qx true
+          codesign --verify --verbose build/AgentBar.app
+
+      - name: Upload AgentBar-mac.zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: AgentBar-mac
+          path: mac/build/AgentBar-mac.zip
+          if-no-files-found: error
+
+      - name: Fail if the build failed
+        if: ${{ failure() }}
+        run: |
+          echo "::error::AgentBar macOS build or packaging failed"
+          exit 1
