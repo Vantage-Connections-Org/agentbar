@@ -91,7 +91,7 @@ class BarWindow : Window
         };
         Loaded += (_, _) => { Refresh(); Reposition(); };
         SizeChanged += (_, _) => Reposition();
-        ContextMenu = BuildMenu();
+        ContextMenuOpening += (_, e) => { e.Handled = true; ShowMenuAtCursor(); }; // same menu as the tray, placed above the taskbar
         _tray = new Tray(this);
         Closed += (_, _) => _tray.Dispose();
         if (File.Exists(HiddenFile)) Loaded += (_, _) => Hide(); // stays hidden across restarts until shown from the tray
@@ -169,7 +169,7 @@ class BarWindow : Window
         if (added) SaveOrder(found);
         _sessions = found.OrderBy(s => _order.IndexOf(s.Key)).ToList();
 
-        _tray?.Update(_states.Values.Count(v => v == "working"), _states.Values.Count(v => v == "waiting"), _sessions.Count, !IsVisible);
+        _tray?.Update(Summary(), !IsVisible);
         string sig = string.Join("|", _sessions.Select(s => $"{s.Key}:{_states[s.Key]}:{s.Name}:{s.Step}:{s.Color}"));
         if (sig == _signature) return;
         _signature = sig;
@@ -491,24 +491,29 @@ class BarWindow : Window
         Refresh();
     }
 
-    // ---- right-click menu -------------------------------------------------------
-    ContextMenu BuildMenu()
+    /// "5 chats · 2 done · 1 working", shared by the tray tooltip and the menu header.
+    public string Summary()
     {
-        var menu = new ContextMenu();
-        var startup = new MenuItem { Header = "Start with Windows", IsCheckable = true, IsChecked = StartsWithWindows() };
-        startup.Click += (_, _) => SetStartWithWindows(startup.IsChecked);
-        var clear = new MenuItem { Header = "Mark all finished as seen" };
-        clear.Click += (_, _) => MarkAllSeen();
-        var hide = new MenuItem { Header = "Hide bar (show it again from the tray)" };
-        hide.Click += (_, _) => ToggleVisible();
-        var quit = new MenuItem { Header = "Quit AgentBar" };
-        quit.Click += (_, _) => { Save(SeenFile, _seen); Close(); };
-        menu.Items.Add(startup);
-        menu.Items.Add(clear);
-        menu.Items.Add(hide);
-        menu.Items.Add(new Separator());
-        menu.Items.Add(quit);
-        return menu;
+        int total = _sessions.Count;
+        if (total == 0) return "No chats running";
+        int done = _states.Values.Count(v => v == "waiting"), working = _states.Values.Count(v => v == "working");
+        return $"{total} chat{(total == 1 ? "" : "s")}" + (done > 0 ? $" · {done} done" : "") + (working > 0 ? $" · {working} working" : "");
+    }
+
+    /// Opens the menu above the taskbar at the mouse's x (tray icon and bar
+    /// right-click; works while the bar is hidden). Rebuilt each time for fresh counts.
+    public void ShowMenuAtCursor()
+    {
+        var menu = AgentMenu.Build(this, Summary());
+        double scale = VisualTreeHelper.GetDpi(this).DpiScaleX;
+        Native.GetCursorPos(out var cursor);
+        double top = _taskbar != IntPtr.Zero && Native.GetWindowRect(_taskbar, out var bar) ? bar.Top : cursor.Y;
+        menu.Placement = System.Windows.Controls.Primitives.PlacementMode.Top; // above this point; WPF keeps it on screen
+        // With no PlacementTarget this rectangle is in physical screen pixels, not DIPs.
+        menu.PlacementRectangle = new Rect(cursor.X - 130 * scale, top, 0, 0);
+        menu.Opened += (_, _) => KeepAboveTaskbar(menu);
+        if (_hwnd != IntPtr.Zero) Native.SetForegroundWindow(_hwnd); // so a click elsewhere closes it
+        menu.IsOpen = true;
     }
 
     public static bool StartsWithWindows()
