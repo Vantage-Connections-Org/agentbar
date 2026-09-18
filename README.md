@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/icon.png" width="112" alt="AgentBar icon: a goat in sunglasses">
+  <img src="docs/icon.png" width="112" alt="AgentBar icon: a goat in sunglasses peeking over a taskbar">
 </p>
 
 <h1 align="center">AgentBar</h1>
@@ -128,7 +128,7 @@ function c {
 ```powershell
 dotnet run --project src          # run from source
 dotnet publish src -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o out
-cd art; py make_goat.py            # redraw the icon (needs Pillow)
+cd art; py make_ico.py             # rebuild the icon from the source art (needs Pillow)
 ```
 
 `src/Discovery.cs` finds the chats, `src/BarWindow.cs` draws the bar and handles hover, drag and click, and `src/Native.cs` holds the Win32 calls.
