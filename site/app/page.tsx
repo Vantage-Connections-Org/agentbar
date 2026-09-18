@@ -52,8 +52,9 @@ export default async function Home() {
 
       <main>
         {/* Hero */}
+        {/* No fade-in here: the hero is the LCP element and must paint on first render. */}
         <section className="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-14 sm:px-6 md:pt-20 lg:grid-cols-[1fr_1.15fr]">
-          <Reveal>
+          <div>
             <h1 className="text-4xl font-semibold leading-[1.05] tracking-tighter md:text-5xl lg:text-6xl">
               Every agent chat, one glance at your taskbar.
             </h1>
@@ -76,9 +77,9 @@ export default async function Home() {
                 View source
               </a>
             </div>
-          </Reveal>
+          </div>
 
-          <Reveal delay={0.1} className="relative">
+          <div className="relative">
             <div className="overflow-hidden rounded-2xl border border-line bg-[#18181a] p-3 shadow-[0_24px_60px_-24px_rgb(22_24_26/0.45)]">
               <Image
                 src="/hover-card.png"
@@ -89,7 +90,7 @@ export default async function Home() {
                 className="h-auto w-full rounded-lg"
               />
             </div>
-          </Reveal>
+          </div>
         </section>
 
         {/* States */}
