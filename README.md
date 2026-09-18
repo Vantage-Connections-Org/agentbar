@@ -45,7 +45,8 @@ One square per chat, sitting in the empty part of your taskbar next to the tray.
 - **Hover** a square for the chat's name, tool and folder, its status and elapsed time, and what it's doing right now.
 - **Click** to bring that chat's window (Zed, Windows Terminal, VS Code, Cursor, …) to the front. A green square turns dim green once you've looked.
 - **Drag** squares to reorder them. The order is remembered.
-- **Right-click** the bar for *Start with Windows*, *Mark all finished as seen* and *Quit*.
+- **Right-click** the bar for *Start with Windows*, *Mark all finished as seen*, *Hide bar* and *Quit*.
+- **Tray icon:** click the goat in the system tray to show or hide the bar. Hovering it shows a count (e.g. "5 chats, 2 done, 1 working"), and right-clicking it opens the same menu. A hidden bar stays hidden across restarts until you show it again. Windows puts new tray icons in the <code>^</code> overflow at first, so drag the goat onto the taskbar to keep it visible.
 
 ## Install
 

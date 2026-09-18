@@ -47,6 +47,7 @@ class BarWindow : Window
     const double Slot = 40;                 // square (34) + margins (3+3)
     static readonly string SeenFile = System.IO.Path.Combine(AppContext.BaseDirectory, "seen.json");
     static readonly string OrderFile = System.IO.Path.Combine(AppContext.BaseDirectory, "order.json");
+    static readonly string HiddenFile = System.IO.Path.Combine(AppContext.BaseDirectory, "hidden");
 
     readonly StackPanel _panel = new() { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Stretch };
     readonly Discovery _discovery = new();
@@ -58,7 +59,8 @@ class BarWindow : Window
     List<Session> _sessions = new();
     Dictionary<string, string> _states = new();
     string _signature = "";
-    IntPtr _tray, _hwnd;
+    IntPtr _taskbar, _hwnd;
+    readonly Tray _tray;
 
     // drag-to-reorder
     Session _pressed;
@@ -78,8 +80,8 @@ class BarWindow : Window
         Title = "AgentBar";
         Content = new Border { Background = Brushes.Transparent, Child = _panel, Padding = new Thickness(2, 0, 2, 0) };
 
-        _tray = Native.FindWindow("Shell_TrayWnd", null);
-        if (_tray != IntPtr.Zero) new WindowInteropHelper(this).Owner = _tray; // owned by the taskbar = drawn above it
+        _taskbar = Native.FindWindow("Shell_TrayWnd", null);
+        if (_taskbar != IntPtr.Zero) new WindowInteropHelper(this).Owner = _taskbar; // owned by the taskbar = drawn above it
 
         SourceInitialized += (_, _) =>
         {
@@ -90,6 +92,9 @@ class BarWindow : Window
         Loaded += (_, _) => { Refresh(); Reposition(); };
         SizeChanged += (_, _) => Reposition();
         ContextMenu = BuildMenu();
+        _tray = new Tray(this);
+        Closed += (_, _) => _tray.Dispose();
+        if (File.Exists(HiddenFile)) Loaded += (_, _) => Hide(); // stays hidden across restarts until shown from the tray
 
         _card.Opened += (_, _) => KeepAboveTaskbar(_card.Child);
         _hoverDelay.Tick += (_, _) => { _hoverDelay.Stop(); if (_card.PlacementTarget != null && !_dragging) _card.IsOpen = true; };
@@ -119,10 +124,10 @@ class BarWindow : Window
     // ---- placement: just left of the system tray, full taskbar height ------------
     void Reposition()
     {
-        if (_tray == IntPtr.Zero || !Native.GetWindowRect(_tray, out var bar)) return;
+        if (_taskbar == IntPtr.Zero || !Native.GetWindowRect(_taskbar, out var bar)) return;
         double scale = VisualTreeHelper.GetDpi(this).DpiScaleX;
         int right = bar.Right - (int)(300 * scale);
-        IntPtr notify = Native.FindWindowEx(_tray, IntPtr.Zero, "TrayNotifyWnd", null);
+        IntPtr notify = Native.FindWindowEx(_taskbar, IntPtr.Zero, "TrayNotifyWnd", null);
         if (notify != IntPtr.Zero && Native.GetWindowRect(notify, out var n) && n.Width > 0 && n.Left > bar.Left)
             right = n.Left;
         Left = (right - ActualWidth * scale - 8 * scale) / scale;
@@ -164,6 +169,7 @@ class BarWindow : Window
         if (added) SaveOrder(found);
         _sessions = found.OrderBy(s => _order.IndexOf(s.Key)).ToList();
 
+        _tray?.Update(_states.Values.Count(v => v == "working"), _states.Values.Count(v => v == "waiting"), _sessions.Count, !IsVisible);
         string sig = string.Join("|", _sessions.Select(s => $"{s.Key}:{_states[s.Key]}:{s.Name}:{s.Step}:{s.Color}"));
         if (sig == _signature) return;
         _signature = sig;
@@ -468,6 +474,23 @@ class BarWindow : Window
         Save(OrderFile, _order);
     }
 
+    // ---- shared with the tray icon ----------------------------------------------
+    public void ToggleVisible()
+    {
+        if (IsVisible) { HideCard(); Hide(); File.WriteAllText(HiddenFile, ""); }
+        else { Show(); Reposition(); try { File.Delete(HiddenFile); } catch { } }
+        _signature = "";
+        Refresh();
+    }
+
+    public void MarkAllSeen()
+    {
+        foreach (var s in _sessions.Where(s => s.State == "idle")) _seen[s.Key] = s.Since;
+        Save(SeenFile, _seen);
+        _signature = "";
+        Refresh();
+    }
+
     // ---- right-click menu -------------------------------------------------------
     ContextMenu BuildMenu()
     {
@@ -475,29 +498,26 @@ class BarWindow : Window
         var startup = new MenuItem { Header = "Start with Windows", IsCheckable = true, IsChecked = StartsWithWindows() };
         startup.Click += (_, _) => SetStartWithWindows(startup.IsChecked);
         var clear = new MenuItem { Header = "Mark all finished as seen" };
-        clear.Click += (_, _) =>
-        {
-            foreach (var s in _sessions.Where(s => s.State == "idle")) _seen[s.Key] = s.Since;
-            Save(SeenFile, _seen);
-            _signature = "";
-            Refresh();
-        };
+        clear.Click += (_, _) => MarkAllSeen();
+        var hide = new MenuItem { Header = "Hide bar (show it again from the tray)" };
+        hide.Click += (_, _) => ToggleVisible();
         var quit = new MenuItem { Header = "Quit AgentBar" };
         quit.Click += (_, _) => { Save(SeenFile, _seen); Close(); };
         menu.Items.Add(startup);
         menu.Items.Add(clear);
+        menu.Items.Add(hide);
         menu.Items.Add(new Separator());
         menu.Items.Add(quit);
         return menu;
     }
 
-    static bool StartsWithWindows()
+    public static bool StartsWithWindows()
     {
         using var key = Registry.CurrentUser.OpenSubKey(RunKey);
         return key?.GetValue("AgentBar") != null;
     }
 
-    static void SetStartWithWindows(bool on)
+    public static void SetStartWithWindows(bool on)
     {
         using var key = Registry.CurrentUser.CreateSubKey(RunKey);
         if (on) key.SetValue("AgentBar", $"\"{Environment.ProcessPath}\"");
