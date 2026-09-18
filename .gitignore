@@ -1,0 +1,5 @@
+bin/
+obj/
+*.user
+.vs/
+art/goat-small-on-dark.png
