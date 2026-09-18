@@ -1,0 +1,89 @@
+name: release
+
+# Push a tag like v0.1.0 to build both apps and publish a GitHub Release.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to (re)build the release for, e.g. v0.1.0"
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  TAG: ${{ github.event.inputs.tag || github.ref_name }}
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      # Self-contained: runs on any Windows 10/11 PC without installing .NET.
+      - name: Build AgentBar.exe
+        shell: pwsh
+        run: |
+          dotnet publish src/AgentBar.csproj -c Release -r win-x64 --self-contained true `
+            -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:EnableCompressionInSingleFile=true -p:DebugType=none -o out
+          New-Item -ItemType Directory out/hooks | Out-Null
+          Copy-Item hooks/agent-status.js out/hooks/
+          Copy-Item LICENSE out/
+          Compress-Archive -Path out/AgentBar.exe, out/hooks, out/LICENSE -DestinationPath AgentBar-windows-x64.zip
+          (Get-Item AgentBar-windows-x64.zip).Length
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: AgentBar-windows-x64.zip
+          if-no-files-found: error
+
+  mac:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+      - name: Build AgentBar.app
+        run: bash mac/build-app.sh && cp mac/build/AgentBar-mac.zip AgentBar-mac-preview.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac
+          path: AgentBar-mac-preview.zip
+          if-no-files-found: error
+
+  publish:
+    needs: [windows, mac]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+      - uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+      - name: Create or update the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cat > notes.md <<'EOF'
+          ## Download
+
+          **Windows 10/11:** `AgentBar-windows-x64.zip`. Unzip anywhere (for example `%LOCALAPPDATA%\AgentBar`) and run `AgentBar.exe`. No .NET install needed. The exe isn't code-signed yet, so Windows SmartScreen may ask you to confirm: click *More info* then *Run anyway*.
+
+          **macOS 13+ (preview):** `AgentBar-mac-preview.zip`. A first build of the menu bar version. It compiles and packages in CI but hasn't been widely tested yet; please [open an issue](https://github.com/Vantage-Connections-Org/agentbar/issues) with what you see. Unsigned: right-click the app and choose *Open* the first time.
+
+          Optional live-step hook: see the README.
+          EOF
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" AgentBar-windows-x64.zip AgentBar-mac-preview.zip --clobber
+          else
+            gh release create "$TAG" AgentBar-windows-x64.zip AgentBar-mac-preview.zip --title "AgentBar $TAG" --notes-file notes.md
+          fi
