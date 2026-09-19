@@ -38,6 +38,21 @@ jobs:
           /usr/libexec/PlistBuddy -c "Print :LSUIElement" build/AgentBar.app/Contents/Info.plist | grep -qx true
           codesign --verify --verbose build/AgentBar.app
 
+      - name: Smoke test (launches and stays up)
+        run: |
+          set -euo pipefail
+          # Real launch on the runner. No Claude/Codex sessions exist here, so this only proves
+          # the app starts, scans the (missing) session folders without crashing, and keeps running.
+          ./build/AgentBar.app/Contents/MacOS/AgentBar > smoke.log 2>&1 &
+          PID=$!
+          sleep 8
+          if ! kill -0 "$PID" 2>/dev/null; then
+            echo "AgentBar exited within 8 seconds:"; cat smoke.log; exit 1
+          fi
+          kill "$PID"
+          echo "AgentBar stayed up for 8 seconds"
+          cat smoke.log
+
       - name: Upload AgentBar-mac.zip
         uses: actions/upload-artifact@v4
         with:
