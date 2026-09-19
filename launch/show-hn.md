@@ -41,8 +41,8 @@ Limitations, honestly:
 - Windows 10/11 only, with the taskbar at the bottom of the primary monitor.
 - Clicking focuses the window, not the terminal tab. If several chats share one editor window you land in the window and pick the tab yourself. Zed has no way for other apps to switch its terminal tabs.
 - The session files it reads aren't public APIs. A future Claude Code or Codex release could change them and break discovery.
-- No prebuilt binary yet: you clone and run `install.ps1`, which needs the .NET 8 SDK.
-- A macOS menu-bar version is in progress. It isn't available yet.
+- The exe isn't code-signed yet, so SmartScreen asks once. Download is a self-contained zip (no .NET needed) from GitHub Releases.
+- The macOS menu-bar version is an early preview: it builds and launches in CI but has had little real-world testing.
 
 It's free and MIT licensed. Not affiliated with Anthropic or OpenAI.
 

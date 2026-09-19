@@ -42,9 +42,9 @@ How it works: it reads files Claude Code and Codex already write about their own
 What it doesn't do yet:
 - Windows 10/11 only, taskbar at the bottom of the primary monitor.
 - Clicking focuses the window, not the specific terminal tab.
-- You build it from source with the .NET 8 SDK (one PowerShell script).
+- Download a zip from GitHub Releases, unzip, run. No installer, no .NET install needed. Also on Scoop.
 - The files it reads aren't official APIs, so a tool update could break it.
-- A macOS menu-bar version is in progress, not available yet.
+- A macOS menu-bar version is out as an early, lightly tested preview.
 
 It's free and MIT licensed, and not affiliated with Anthropic or OpenAI. I'd love to hear what breaks on your setup.
 

@@ -61,9 +61,9 @@ Without it you still get working / done / idle.
 
 **6/6**
 
-Limits: Windows 10/11 only, taskbar at the bottom, build from source with .NET 8. Click focuses the window, not the tab.
+Limits: Windows 10/11, taskbar at the bottom, exe not code-signed yet. Click focuses the window, not the tab.
 
-A macOS menu-bar version is in progress.
+A macOS menu-bar preview is in the latest release.
 
 github.com/Vantage-Connections-Org/agentbar
 https://getagentbar.vercel.app

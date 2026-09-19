@@ -99,7 +99,7 @@ Windows-specific bits that might interest people here:
 
 No network access, no admin rights needed to run. It only reads the session files those tools keep locally.
 
-Limits: needs the taskbar at the bottom of the primary monitor. Built from source with the .NET 8 SDK for now (`install.ps1`).
+Limits: needs the taskbar at the bottom of the primary monitor. Download: a self-contained zip from GitHub Releases (no .NET needed), or Scoop.
 
 https://github.com/Vantage-Connections-Org/agentbar
 
@@ -135,7 +135,7 @@ Where help would be useful:
 
 - Hosts that the window-focus logic doesn't handle yet (it currently recognises Zed, Windows Terminal, VS Code, Cursor, Windsurf, WezTerm, Alacritty and a few JetBrains IDEs by name, and falls back to any ancestor process with a window).
 - Taskbar positions other than bottom-of-primary-monitor, which aren't supported.
-- A macOS menu-bar version is in progress but not released.
+- A macOS menu-bar version is out as an early preview (lightly tested); feedback welcome.
 
 Known fragility: the files it reads aren't public APIs, so upstream changes in either tool can break discovery.
 
