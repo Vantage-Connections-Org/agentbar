@@ -84,9 +84,7 @@ jobs:
 
           Optional live-step hook: see the README.
           EOF
-          if [ -s changes.md ]; then { printf "## What's new
-"; cat changes.md; printf "
-"; cat notes.md; } > n2.md && mv n2.md notes.md; fi
+          if [ -s changes.md ]; then { echo "## What's new"; cat changes.md; echo; cat notes.md; } > n2.md && mv n2.md notes.md; fi
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" AgentBar-windows-x64.zip AgentBar-mac-preview.zip --clobber
           else
