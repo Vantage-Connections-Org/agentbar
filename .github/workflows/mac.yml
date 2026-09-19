@@ -49,9 +49,19 @@ jobs:
           if ! kill -0 "$PID" 2>/dev/null; then
             echo "AgentBar exited within 8 seconds:"; cat smoke.log; exit 1
           fi
+          # Screenshot the real menu bar while it runs (full-width strip + whole screen), for review.
+          screencapture -x menubar-full.png || true
           kill "$PID"
           echo "AgentBar stayed up for 8 seconds"
           cat smoke.log
+
+      - name: Upload smoke-test screenshot
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac-smoke-screenshot
+          path: mac/menubar-full.png
+          if-no-files-found: ignore
 
       - name: Upload AgentBar-mac.zip
         uses: actions/upload-artifact@v4
