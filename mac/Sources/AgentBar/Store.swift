@@ -158,8 +158,8 @@ enum Notifier {
         guard available else { return }
         let content = UNMutableNotificationContent()
         content.title = "Chat finished"
-        content.body = "(s.name) ((s.tool == "codex" ? "Codex" : "Claude Code")) is waiting on you."
-        let request = UNNotificationRequest(identifier: "finished-(s.key)-(s.since)", content: content, trigger: nil)
+        content.body = "\(s.name) (\(s.tool == "codex" ? "Codex" : "Claude Code")) is waiting on you."
+        let request = UNNotificationRequest(identifier: "finished-\(s.key)-\(s.since)", content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request)
     }
 }
