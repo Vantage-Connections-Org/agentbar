@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- macOS preview: a notification when a chat finishes (same as Windows). Asks for notification permission on first launch.
+
 ## v0.1.2 (2026-09-19)
 
 - Windows: a notification when a chat finishes and is waiting on you. On by default; turn it off with the *Notify when a chat finishes* switch in the right-click menu.
