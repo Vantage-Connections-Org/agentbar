@@ -164,6 +164,15 @@ export default async function Home() {
                 <CursorClick size={28} className="text-accent" />
                 <h3 className="mt-4 text-lg font-semibold">Click a square, land in that chat&apos;s window</h3>
                 <p className="mt-2 text-muted">Works with Zed, Windows Terminal, VS Code, Cursor and more. Drag squares to reorder them.</p>
+                {/* Real screen recording of dragging a square (docs/demo-drag.gif) */}
+                <img
+                  src="/demo-drag.gif"
+                  alt="Dragging a chat square along the AgentBar row: it lights up while held and drops into a new position"
+                  width={1000}
+                  height={120}
+                  loading="lazy"
+                  className="mt-auto h-auto w-full rounded-lg pt-5"
+                />
               </div>
             </Reveal>
             <Reveal delay={0.1} className="md:col-span-3">

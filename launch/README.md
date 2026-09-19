@@ -89,5 +89,6 @@ Composed only from real screenshots and the real icon.
 | `ph-3-states.png` | 1270x760 | Product Hunt gallery 3 |
 | `ph-thumbnail-240.png` | 240x240 | Product Hunt thumbnail |
 | `x-1200x675.png` | 1200x675 | X post / Reddit image post |
+| `demo-drag.gif` | 1000x120 | Real recording of dragging a square. Use for X post 1 / Reddit where a GIF is asked for |
 
 The site's own link preview (Open Graph, 1200x630) is generated from the same assets, so links to https://getagentbar.vercel.app unfurl with a real image.
