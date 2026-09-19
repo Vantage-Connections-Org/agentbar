@@ -241,4 +241,180 @@ notification_method = "bel"`,
       },
     ],
   },
+  {
+    slug: "claude-code-hooks-on-windows",
+    title: "Claude Code Hooks on Windows: A Practical Intro",
+    description:
+      "Set up Claude Code hooks on Windows: where settings.json lives, the hook JSON shape, everyday events, which shell runs them, the /hooks menu and a real example.",
+    updated: "2026-09-18",
+    sections: [
+      // Source: https://code.claude.com/docs/en/hooks.md
+      //         https://code.claude.com/docs/en/hooks-guide.md (hook locations table)
+      {
+        heading: "Where hooks live",
+        paragraphs: [
+          "Hooks are shell commands Claude Code runs automatically at set points in its lifecycle. You define them in a settings file, and the file you pick decides their scope.",
+          "~/.claude/settings.json applies to all your projects and stays on your machine. .claude/settings.json applies to one project and can be committed to the repo. .claude/settings.local.json also applies to one project but is not shared.",
+          "On Windows, ~ is your user folder, so the user file is C:\\Users\\<you>\\.claude\\settings.json.",
+        ],
+        code: "~/.claude/settings.json\n.claude/settings.json\n.claude/settings.local.json",
+      },
+      // Source: https://code.claude.com/docs/en/hooks.md (configuration structure)
+      {
+        heading: "The shape of a hook",
+        paragraphs: [
+          "Everything sits under a hooks key. Each event name holds a list of groups, each group has an optional matcher, and each group holds a list of handlers. A command handler has \"type\": \"command\" and the command to run.",
+          "For tool events the matcher filters by tool name, so \"Edit|Write\" runs only after file edits. An empty matcher runs on everything.",
+          "Your command receives the event details as JSON on stdin, including session_id, transcript_path, cwd and hook_event_name.",
+        ],
+        code: `{
+  "hooks": {
+    "EventName": [
+      {
+        "matcher": "ToolName",
+        "hooks": [
+          { "type": "command", "command": "your-command-here" }
+        ]
+      }
+    ]
+  }
+}`,
+      },
+      // Source: https://code.claude.com/docs/en/hooks.md (hook events)
+      //         https://code.claude.com/docs/en/hooks-guide.md (limitations: Stop)
+      {
+        heading: "Events you will use most",
+        paragraphs: [
+          "SessionStart fires when a session begins or resumes. SessionEnd fires when it terminates.",
+          "UserPromptSubmit fires when you submit a prompt, before Claude processes it. PreToolUse fires before a tool call executes and can block it. PostToolUse fires after a tool call succeeds.",
+          "Notification fires when Claude Code sends a notification, such as waiting for input or permission. Stop fires whenever Claude finishes responding, not only at task completion, and does not fire when you interrupt.",
+          "Exit code 2 from a hook means a blocking error. On events that can block, like PreToolUse, that stops the action.",
+        ],
+      },
+      // Source: https://code.claude.com/docs/en/hooks-guide.md (shell profile troubleshooting)
+      //         https://code.claude.com/docs/en/hooks.md (shell field)
+      {
+        heading: "Which shell runs your command",
+        paragraphs: [
+          "On Windows, Claude Code runs a command hook through Git Bash, or through PowerShell when Git Bash is not installed.",
+          "Set the shell field on a handler to choose explicitly. It accepts \"bash\" or \"powershell\".",
+          "Git Bash can still source your profile, so an unconditional echo in ~/.bashrc gets prepended to your hook's output and can break a hook that returns JSON. Wrap those lines so they only run in interactive shells.",
+        ],
+        code: `{ "type": "command", "shell": "powershell", "command": "your-command-here" }`,
+      },
+      // Source: https://code.claude.com/docs/en/hooks-guide.md#get-notified-when-claude-needs-input
+      //         https://code.claude.com/docs/en/hooks-guide.md (/hooks menu, troubleshooting)
+      {
+        heading: "A first hook, checked with /hooks",
+        paragraphs: [
+          "This is the Windows Notification example from the official docs. It opens a message box whenever Claude is waiting on you. Test the command in PowerShell first, since the box can open behind your terminal.",
+          "Type /hooks in Claude Code to browse configured hooks by event and confirm yours is listed. The menu is read-only, so edit settings.json to change anything.",
+          "File edits are normally picked up automatically. If a new hook does not show up after a few seconds, restart the session.",
+        ],
+        code: String.raw`{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -Command \"[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); [System.Windows.Forms.MessageBox]::Show('Claude Code needs your attention', 'Claude Code')\""
+          }
+        ]
+      }
+    ]
+  }
+}`,
+      },
+      // Source: AgentBar README (agentbar/README.md)
+      {
+        heading: "A real-world example: AgentBar's status hook",
+        paragraphs: [
+          "AgentBar, a free Windows app that shows each Claude Code and Codex chat as a square in the taskbar, ships an optional hook script, agent-status.js. It works without hooks, but adding this one shows the step the agent is on in the hover card and turns a square blue when a chat waits for your answer.",
+          "It uses four events: SessionStart to register the chat (and launch AgentBar if it is not running), PreToolUse for the current step, PostToolUse matched to AskUserQuestion, and Notification for waiting prompts. Replace <you> with your user name. The hook needs Node.js.",
+        ],
+        code: String.raw`{
+  "hooks": {
+    "SessionStart": [{ "hooks": [{ "type": "command", "command": "node \"C:\\Users\\<you>\\AppData\\Local\\AgentBar\\hooks\\agent-status.js\" start claude" }] }],
+    "PreToolUse":   [{ "matcher": "", "hooks": [{ "type": "command", "command": "node \"C:\\Users\\<you>\\AppData\\Local\\AgentBar\\hooks\\agent-status.js\" tool claude" }] }],
+    "PostToolUse":  [{ "matcher": "AskUserQuestion", "hooks": [{ "type": "command", "command": "node \"C:\\Users\\<you>\\AppData\\Local\\AgentBar\\hooks\\agent-status.js\" toolDone claude" }] }],
+    "Notification": [{ "hooks": [{ "type": "command", "command": "node \"C:\\Users\\<you>\\AppData\\Local\\AgentBar\\hooks\\agent-status.js\" ask claude" }] }]
+  }
+}`,
+      },
+    ],
+  },
+  {
+    slug: "claude-code-vs-codex-cli-sessions",
+    title: "Claude Code vs Codex CLI: How Sessions Work",
+    description:
+      "How Claude Code and OpenAI Codex CLI store, resume, name and fork sessions, and how each supports hooks and notifications, compared side by side with commands.",
+    updated: "2026-09-18",
+    sections: [
+      // Sources: https://code.claude.com/docs/en/sessions.md#where-transcripts-are-stored
+      //          https://learn.chatgpt.com/docs/config-file/config-advanced (CODEX_HOME default)
+      //          https://github.com/openai/codex/blob/main/codex-rs/rollout/src/recorder.rs (sessions/YYYY/MM/DD, rollout-*.jsonl)
+      {
+        heading: "Where sessions are stored",
+        paragraphs: [
+          "Claude Code stores each session as a JSONL transcript at ~/.claude/projects/<project>/<session-id>.jsonl, where <project> is the working directory path with non-alphanumeric characters replaced by -. Transcripts are kept for 30 days by default, set by cleanupPeriodDays.",
+          "Codex keeps its local state under CODEX_HOME, which defaults to ~/.codex. Each session is a JSONL rollout file under ~/.codex/sessions/, in year, month and day folders.",
+          "Both formats are files written for the tool's own use. Claude Code's docs say its entry format is internal and changes between versions.",
+        ],
+        code: "# Claude Code\n~/.claude/projects/<project>/<session-id>.jsonl\n\n# Codex CLI\n~/.codex/sessions/YYYY/MM/DD/rollout-<timestamp>-<id>.jsonl",
+      },
+      // Sources: https://code.claude.com/docs/en/sessions.md#resume-a-session
+      //          https://learn.chatgpt.com/docs/developer-commands?surface=cli (codex resume)
+      {
+        heading: "Resume a session",
+        paragraphs: [
+          "Claude Code: claude --continue reopens the most recent conversation in the current directory. claude --resume opens a session picker, and claude --resume <name> resumes a named session directly. Inside a session, /resume switches conversations.",
+          "Codex: codex resume --last skips the picker and resumes the most recent chat from the current working directory, and --all widens that to other directories. codex resume alone opens a picker, and codex resume <id-or-name> goes straight to one session.",
+        ],
+        code: "claude --continue\nclaude --resume\nclaude --resume <name>\n\ncodex resume --last\ncodex resume --last --all\ncodex resume\ncodex resume <id-or-name>",
+      },
+      // Sources: https://code.claude.com/docs/en/sessions.md#name-your-sessions
+      //          https://github.com/openai/codex/blob/main/codex-rs/tui/src/slash_command.rs (/rename)
+      //          https://github.com/openai/codex/blob/main/codex-rs/rollout/src/session_index.rs (session_index.jsonl)
+      {
+        heading: "Name a session",
+        paragraphs: [
+          "Both tools have /rename. In Claude Code you can also name a session at startup with claude -n <name>, and the name appears on the prompt bar. In Codex, /rename renames the current thread.",
+          "Codex appends names to ~/.codex/session_index.jsonl, with the thread id, thread_name and updated_at on each line. In both tools, a name you set can be passed to resume.",
+        ],
+        code: "claude -n auth-refactor\n/rename auth-refactor\n\n# Codex, inside a session:\n/rename auth-refactor",
+      },
+      // Sources: https://code.claude.com/docs/en/sessions.md#branch-a-session
+      //          https://learn.chatgpt.com/docs/developer-commands?surface=cli (codex fork)
+      //          https://github.com/openai/codex/blob/main/codex-rs/tui/src/slash_command.rs (/fork)
+      {
+        heading: "Fork a session",
+        paragraphs: [
+          "Claude Code: /branch copies the conversation so far and switches you into the copy, leaving the original intact. From the command line, add --fork-session to --continue or --resume.",
+          "Codex: codex fork forks a previous session into a new chat and preserves the original transcript. It takes --last and --all like resume. Inside a session, /fork forks the current chat.",
+        ],
+        code: "/branch try-another-approach\nclaude --continue --fork-session\n\ncodex fork --last\n/fork",
+      },
+      // Sources: https://code.claude.com/docs/en/hooks.md (locations, events)
+      //          https://learn.chatgpt.com/docs/hooks (Codex events, default on, review)
+      //          https://learn.chatgpt.com/docs/config-file/config-advanced (notify, tui.notifications)
+      {
+        heading: "Hooks and notifications",
+        paragraphs: [
+          "Claude Code reads hooks from ~/.claude/settings.json, .claude/settings.json and .claude/settings.local.json. Events include SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, Notification, Stop and SessionEnd. /hooks shows a read-only list of what is configured.",
+          "Codex reads hooks from ~/.codex/hooks.json, ~/.codex/config.toml and their .codex/ equivalents in a repo. Events include SessionStart, SessionEnd, PreToolUse, PermissionRequest, PostToolUse, UserPromptSubmit and Stop. Hooks are on by default, and new or changed hooks are skipped until you trust them, which you can do in /hooks.",
+          "Codex also has tui.notifications for built-in terminal alerts and a notify setting that runs an external program, currently only on agent-turn-complete.",
+        ],
+      },
+      // Source: AgentBar README (agentbar/README.md)
+      {
+        heading: "Both in one taskbar",
+        paragraphs: [
+          "If you run both tools, AgentBar shows each live Claude Code and Codex chat as a square in the Windows taskbar, with the tool's logo on each square. It finds Claude Code chats from ~/.claude/sessions/<pid>.json and Codex chats from the lock files in ~/.codex/thread-writer-locks.",
+          "Names come from your /rename in either tool, via session_index.jsonl for Codex. It needs no API keys or network and never modifies either tool's files.",
+        ],
+      },
+    ],
+  },
 ];
