@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.9.0.schema.json
 PackageIdentifier: VantageConnections.AgentBar
-PackageVersion: 0.1.0
+PackageVersion: 0.1.1
 InstallerType: zip
 NestedInstallerType: portable
 NestedInstallerFiles:
@@ -9,7 +9,7 @@ NestedInstallerFiles:
 MinimumOSVersion: 10.0.17763.0
 Installers:
   - Architecture: x64
-    InstallerUrl: https://github.com/Vantage-Connections-Org/agentbar/releases/download/v0.1.0/AgentBar-windows-x64.zip
-    InstallerSha256: B5A4E5847F5DF24C4C02070006C7A34E0F73EC8562D1F8F1F6C92D14C29F5205
+    InstallerUrl: https://github.com/Vantage-Connections-Org/agentbar/releases/download/v0.1.1/AgentBar-windows-x64.zip
+    InstallerSha256: 2FB5A633DD8DE81616196ABE1E3268074FD43496D919DD970F6090417AF888F9
 ManifestType: installer
 ManifestVersion: 1.9.0

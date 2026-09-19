@@ -1,13 +1,21 @@
 {
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Every running Claude Code and Codex chat as a status square in your Windows taskbar.",
     "homepage": "https://getagentbar.vercel.app",
     "license": "MIT",
-    "url": "https://github.com/Vantage-Connections-Org/agentbar/releases/download/v0.1.0/AgentBar-windows-x64.zip",
-    "hash": "b5a4e5847f5df24c4c02070006c7a34e0f73ec8562d1f8f1f6c92d14c29f5205",
+    "url": "https://github.com/Vantage-Connections-Org/agentbar/releases/download/v0.1.1/AgentBar-windows-x64.zip",
+    "hash": "2fb5a633dd8de81616196abe1e3268074fd43496d919dd970f6090417af888f9",
     "bin": "AgentBar.exe",
-    "shortcuts": [["AgentBar.exe", "AgentBar"]],
-    "persist": ["seen.json", "order.json"],
+    "shortcuts": [
+        [
+            "AgentBar.exe",
+            "AgentBar"
+        ]
+    ],
+    "persist": [
+        "seen.json",
+        "order.json"
+    ],
     "checkver": "github",
     "autoupdate": {
         "url": "https://github.com/Vantage-Connections-Org/agentbar/releases/download/v$version/AgentBar-windows-x64.zip"
