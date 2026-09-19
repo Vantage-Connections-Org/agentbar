@@ -48,6 +48,13 @@ class BarWindow : Window
     static readonly string SeenFile = System.IO.Path.Combine(AppContext.BaseDirectory, "seen.json");
     static readonly string OrderFile = System.IO.Path.Combine(AppContext.BaseDirectory, "order.json");
     static readonly string HiddenFile = System.IO.Path.Combine(AppContext.BaseDirectory, "hidden");
+    static readonly string QuietFile = System.IO.Path.Combine(AppContext.BaseDirectory, "no-finish-notifications");
+    public static bool NotifyOnFinish
+    {
+        get => !File.Exists(QuietFile);
+        set { try { if (value) File.Delete(QuietFile); else File.WriteAllText(QuietFile, ""); } catch { } }
+    }
+    Dictionary<string, string> _lastStates = null; // null until the first scan, so startup never notifies
 
     readonly StackPanel _panel = new() { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Stretch };
     readonly Discovery _discovery = new();
@@ -163,6 +170,12 @@ class BarWindow : Window
         if (_dragging) return;
         var found = _discovery.Scan();
         _states = found.ToDictionary(s => s.Key, Effective);
+        // Notify when a chat goes from working to done while AgentBar is watching.
+        if (_lastStates != null && NotifyOnFinish)
+            foreach (var s in found)
+                if (_states[s.Key] == "waiting" && _lastStates.TryGetValue(s.Key, out var was) && was == "working")
+                    _tray?.Notify("Chat finished", $"{s.Name} ({(s.Tool == "codex" ? "Codex" : "Claude Code")}) is waiting on you.");
+        _lastStates = new Dictionary<string, string>(_states);
         _known.UnionWith(_states.Keys);
         bool added = false;
         foreach (var s in found) if (!_order.Contains(s.Key)) { _order.Insert(0, s.Key); added = true; } // new chats join on the left: the bar grows leftward from the tray

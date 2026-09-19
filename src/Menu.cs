@@ -99,7 +99,7 @@ static class AgentMenu
     static readonly ResourceDictionary Styles = (ResourceDictionary)XamlReader.Parse(Xaml);
 
     // Segoe Fluent Icons glyphs
-    const string EyeOn = "", EyeOff = "", Power = "", Check = "", Close = "";
+    const string EyeOn = "", EyeOff = "", Power = "", Check = "", Close = "", Bell = "";
 
     public static ContextMenu Build(BarWindow bar, string summary)
     {
@@ -118,6 +118,12 @@ static class AgentMenu
         startup.Click += (_, _) => BarWindow.SetStartWithWindows(startup.IsChecked);
         startup.StaysOpenOnClick = true; // watch the switch flip
         menu.Items.Add(startup);
+        var notify = Item("Notify when a chat finishes", Bell, null);
+        notify.IsCheckable = true;
+        notify.IsChecked = BarWindow.NotifyOnFinish;
+        notify.Click += (_, _) => BarWindow.NotifyOnFinish = notify.IsChecked;
+        notify.StaysOpenOnClick = true;
+        menu.Items.Add(notify);
         menu.Items.Add(Item("Mark all finished as seen", Check, bar.MarkAllSeen));
         menu.Items.Add(Divider());
         menu.Items.Add(Item("Quit AgentBar", Close, () => bar.Close()));

@@ -39,6 +39,8 @@ sealed class Tray : IDisposable
         try { File.WriteAllText(flag, ""); } catch { }
     }
 
+    public void Notify(string title, string text) => _icon.ShowBalloonTip(6000, title, text, Forms.ToolTipIcon.None);
+
     public void Update(string summary, bool hidden)
     {
         string text = "AgentBar: " + summary + (hidden ? " (bar hidden)" : "");
