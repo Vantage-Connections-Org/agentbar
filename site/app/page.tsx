@@ -55,8 +55,7 @@ export default function Home() {
                 alt="AgentBar in the Windows taskbar: chat squares left of the system tray, with a hover card showing a chat's name, folder, status and current step"
                 width={1140}
                 height={410}
-                preload
-                sizes="(min-width: 1024px) 600px, calc(100vw - 56px)"
+                priority
                 className="h-auto w-full rounded-lg"
               />
             </div>
