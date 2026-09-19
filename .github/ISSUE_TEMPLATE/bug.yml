@@ -1,0 +1,34 @@
+name: Bug report
+description: Something in AgentBar doesn't work as expected
+labels: [bug]
+body:
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options: ["Windows 11", "Windows 10", "macOS (preview)"]
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: AgentBar version
+      description: Release tag (e.g. v0.1.0) or commit if you built from source
+  - type: dropdown
+    id: tools
+    attributes:
+      label: Which agents were running?
+      multiple: true
+      options: ["Claude Code", "Codex CLI"]
+  - type: input
+    id: host
+    attributes:
+      label: Terminal / editor hosting the chats
+      placeholder: Zed, Windows Terminal, VS Code, Cursor, iTerm2 ...
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+      description: A screenshot of the bar helps a lot.
+    validations:
+      required: true
