@@ -5,6 +5,7 @@ import { DownloadButton } from "@/components/DownloadButton";
 import { Reveal } from "@/components/Reveal";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { FAQ } from "@/lib/faq";
+import { GUIDES } from "@/content/guides";
 import { DOWNLOAD_URL, REPO_URL } from "@/lib/site";
 import { SiteFooter, SiteHeader } from "@/components/SiteChrome";
 
@@ -210,6 +211,25 @@ export default function Home() {
               </p>
               <WaitlistForm />
             </Reveal>
+          </div>
+        </section>
+
+        {/* Guides: internal links into the how-to pages */}
+        <section className="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+          <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Guides for running several agents</h2>
+          <div className="mt-8 flex gap-4 overflow-x-auto pb-2 [scrollbar-width:thin] snap-x">
+            {GUIDES.map((g) => (
+              <a
+                key={g.slug}
+                href={`/guides/${g.slug}`}
+                className="group flex w-72 shrink-0 snap-start flex-col justify-between gap-6 rounded-2xl border border-line bg-surface p-5 transition hover:border-muted"
+              >
+                <span className="font-semibold leading-snug">{g.title}</span>
+                <span className="inline-flex items-center gap-1.5 text-sm text-accent">
+                  Read the guide <ArrowRight size={14} className="transition group-hover:translate-x-0.5" />
+                </span>
+              </a>
+            ))}
           </div>
         </section>
 

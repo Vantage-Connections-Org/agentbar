@@ -156,6 +156,8 @@ Practical notes for running several agents at once, on the website:
 - [How to track multiple Codex CLI sessions](https://getagentbar.vercel.app/guides/track-codex-cli-sessions)
 - [Claude Code hooks on Windows: a practical intro](https://getagentbar.vercel.app/guides/claude-code-hooks-on-windows)
 - [Claude Code vs Codex CLI: how sessions work](https://getagentbar.vercel.app/guides/claude-code-vs-codex-cli-sessions)
+- [How to get notified when Codex CLI is done](https://getagentbar.vercel.app/guides/codex-cli-notifications)
+- [Git worktrees for running AI coding agents in parallel](https://getagentbar.vercel.app/guides/git-worktrees-for-parallel-ai-agents)
 
 ## Limitations
 

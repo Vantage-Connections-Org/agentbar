@@ -417,4 +417,141 @@ notification_method = "bel"`,
       },
     ],
   },
+  {
+    slug: "codex-cli-notifications",
+    title: "How to Get Notified When Codex CLI Is Done",
+    description:
+      "Get alerted when an OpenAI Codex CLI turn finishes or needs approval: tui.notifications, the notify program, PermissionRequest and Stop hooks, and the taskbar.",
+    updated: "2026-09-19",
+    sections: [
+      // Source: https://learn.chatgpt.com/docs/config-file/config-advanced (TUI notifications)
+      //         https://learn.chatgpt.com/docs/config-file/config-reference (tui.notifications)
+      //         https://learn.chatgpt.com/docs/config-file/config-basic (~/.codex/config.toml)
+      {
+        heading: "Turn on built-in terminal notifications",
+        paragraphs: [
+          "Codex can alert you from the terminal itself. Set tui.notifications in ~/.codex/config.toml to enable it for everything, or give it a list to limit it to certain events.",
+          "The two event types are agent-turn-complete, when Codex finishes a turn, and approval-requested, when it stops to ask for your approval.",
+        ],
+        code: `[tui]
+notifications = true
+
+# or only some events:
+# notifications = ["agent-turn-complete", "approval-requested"]`,
+      },
+      // Source: https://learn.chatgpt.com/docs/config-file/config-advanced (notification_method, notification_condition)
+      //         https://learn.chatgpt.com/docs/config-file/config-reference (default: auto)
+      {
+        heading: "Pick how and when it alerts",
+        paragraphs: [
+          "tui.notification_method takes auto, osc9 or bel. The default, auto, prefers an OSC 9 escape sequence, which some terminals show as a desktop notification, and falls back to BEL (\\x07) otherwise. If your terminal ignores OSC 9, set bel to get a plain terminal bell.",
+          "tui.notification_condition takes unfocused or always. With unfocused, alerts only fire when the terminal window is not focused. Use always if you want them even while you are looking at it.",
+        ],
+        code: `[tui]
+notifications = true
+notification_method = "bel"
+notification_condition = "always"`,
+      },
+      // Source: https://learn.chatgpt.com/docs/config-file/config-advanced (notify, payload fields)
+      //         https://learn.chatgpt.com/docs/config-file/config-reference (notify)
+      {
+        heading: "Run your own program with notify",
+        paragraphs: [
+          "The notify setting is separate from the TUI alerts. It runs an external program and passes it a single JSON argument. Today the only event it sends is agent-turn-complete.",
+          "Common payload fields are type, thread-id, turn-id, cwd, input-messages and last-assistant-message. That is enough to show which folder finished and what Codex said last, in a desktop toast, a chat webhook or anything else your script can reach.",
+          "notify does not fire for approval requests, so pair it with tui.notifications or a hook if you also want those.",
+        ],
+        code: `notify = ["python3", "/path/to/notify.py"]`,
+      },
+      // Source: https://learn.chatgpt.com/docs/hooks (events, PermissionRequest, Stop, commandWindows, trust, default on)
+      {
+        heading: "Use hooks for approvals and turn ends",
+        paragraphs: [
+          "Codex hooks live in ~/.codex/hooks.json, ~/.codex/config.toml or the .codex/ folder of a repo. They are on by default, and new or changed hooks are skipped until you trust them in /hooks.",
+          "PermissionRequest runs when Codex is about to ask for approval, such as a shell escalation. Stop runs when a turn completes, but it expects JSON on stdout when it exits 0, and plain text output is invalid, so a notifier script on Stop must print JSON. Codex hooks have no Notification event.",
+          "On Windows, a command handler can take commandWindows (command_windows in TOML), an optional override used only on Windows.",
+        ],
+      },
+      // Source: AgentBar README (agentbar/README.md)
+      {
+        heading: "Or glance at the taskbar",
+        paragraphs: [
+          "Alerts are easy to miss once several Codex chats are running. AgentBar shows each live Codex chat as a square in the Windows taskbar: dull orange while working, green when done and waiting on you. It stays green until you click it, which brings that chat's window to the front.",
+          "It reads working and done from the chat's rollout log, so it needs no notify script and no hooks. Hover a square for the chat's name, folder, status and elapsed time.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "git-worktrees-for-parallel-ai-agents",
+    title: "Git Worktrees for Running AI Coding Agents in Parallel",
+    description:
+      "Run Claude Code and Codex CLI side by side on one repo with git worktrees: add, list and remove, the --worktree flags, cleanup, and telling the sessions apart.",
+    updated: "2026-09-19",
+    sections: [
+      // Source: https://git-scm.com/docs/git-worktree (description, add, -b)
+      //         https://code.claude.com/docs/en/worktrees.md (why isolate sessions)
+      {
+        heading: "One worktree per agent",
+        paragraphs: [
+          "Two agents editing the same checkout can overwrite each other's files. A git worktree is a separate working directory with its own branch, linked to the same repository, so each agent gets its own files while sharing history.",
+          "git worktree add <path> creates one. With -b it also creates a new branch there. Without -b, git names the branch after the last part of the path and creates it from HEAD if it does not exist yet.",
+          "If that branch already exists and is checked out in another worktree, git refuses to create the new one unless you pass --force.",
+        ],
+        code: "git worktree add ../myapp-auth -b auth\ngit worktree add ../myapp-fix-login\n\ncd ../myapp-auth\nclaude",
+      },
+      // Source: https://git-scm.com/docs/git-worktree (list, remove, prune)
+      {
+        heading: "List and remove worktrees",
+        paragraphs: [
+          "git worktree list shows the main worktree first, then each linked one, with its checked-out commit and branch.",
+          "git worktree remove deletes a worktree, but only a clean one with no untracked files and no changes to tracked files. Add --force to remove one with changes. The main worktree cannot be removed.",
+          "If you deleted a worktree folder by hand, run git worktree prune to clear the leftover metadata. Git also cleans it up on its own eventually.",
+        ],
+        code: "git worktree list\ngit worktree remove ../myapp-auth\ngit worktree prune",
+      },
+      // Source: https://code.claude.com/docs/en/worktrees.md (start, .gitignore, .worktreeinclude, base branch)
+      {
+        heading: "Claude Code: --worktree does it for you",
+        paragraphs: [
+          "claude --worktree <name> (or -w) creates a worktree under .claude/worktrees/<name>/ on a new branch called worktree-<name> and starts the session in it. Run it again with another name in a second terminal for a second isolated session. Leave out the name and Claude Code picks one.",
+          "Add .claude/worktrees/ to your .gitignore. A worktree is a fresh checkout, so gitignored files like .env are missing; list them in a .worktreeinclude file at the project root to have them copied in.",
+          "New worktrees branch from the repository's default branch. Set worktree.baseRef to \"head\" in settings to branch from your current local HEAD instead.",
+        ],
+        code: "claude --worktree feature-auth\nclaude -w fix-login",
+      },
+      // Source: https://code.claude.com/docs/en/worktrees.md (clean up worktrees, manage manually)
+      {
+        heading: "Cleaning up after Claude Code",
+        paragraphs: [
+          "When you exit a --worktree session, Claude Code checks for changed or untracked files and new commits. A clean worktree from an unnamed session is removed along with its branch. A named session, or one with work in it, asks whether to keep or remove it.",
+          "Runs with -p have no exit prompt, so their worktrees stay. Remove them with git worktree remove, and run git worktree unlock first if git says the worktree is locked.",
+        ],
+        code: "git worktree unlock .claude/worktrees/fix-login\ngit worktree remove .claude/worktrees/fix-login",
+      },
+      // Source: https://github.com/openai/codex/blob/main/codex-rs/utils/cli/src/shared_options.rs (--worktree)
+      //         https://github.com/openai/codex/blob/main/codex-rs/cli/src/main.rs (supported subcommands)
+      //         https://learn.chatgpt.com/docs/developer-commands?surface=cli (--cd, -C)
+      {
+        heading: "Codex CLI in a worktree",
+        paragraphs: [
+          "The simplest route works with any version: create the worktree with git, then start codex inside it, or point it there with --cd (-C).",
+          "Current Codex source also has a --worktree flag that runs the session in a new managed Git worktree. It takes no name, and it works for new interactive sessions, codex exec, and codex fork with an explicit session ID, not for codex resume. It is not on the CLI reference page yet, so check codex --help to see if your build has it.",
+        ],
+        code: "git worktree add ../myapp-search -b search\ncodex -C ../myapp-search\n\n# newer builds:\ncodex --worktree",
+      },
+      // Sources: https://code.claude.com/docs/en/cli-reference.md (--name / -n)
+      //          https://code.claude.com/docs/en/commands.md (/color)
+      //          https://github.com/openai/codex/blob/main/codex-rs/tui/src/slash_command.rs (/rename)
+      //          AgentBar README (agentbar/README.md)
+      {
+        heading: "Tell the sessions apart",
+        paragraphs: [
+          "Name every session after its task. In Claude Code, start with -n or run /rename, and the name shows in /resume and the terminal title. /color sets the prompt bar to red, blue, green, yellow, purple, orange, pink or cyan. In Codex, /rename renames the current thread.",
+          "AgentBar puts one square per running Claude Code or Codex chat in the Windows taskbar. The border uses the Claude Code chat's /color, and the hover card shows the name, tool and folder, so each worktree is easy to spot. A green square means that agent is done and waiting on you. Click it to bring its window to the front.",
+        ],
+        code: "claude -w feature-auth\n/rename feature-auth\n/color purple",
+      },
+    ],
+  },
 ];
