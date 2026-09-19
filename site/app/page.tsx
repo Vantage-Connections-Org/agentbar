@@ -217,9 +217,13 @@ export default async function Home() {
             <Reveal>
               <h2 className="flex items-center gap-3 text-3xl font-semibold tracking-tight md:text-4xl">
                 <AppleLogo size={34} weight="fill" className="shrink-0" />
-                On a Mac? It&apos;s coming.
+                On a Mac? Try the preview.
               </h2>
-              <p className="mb-6 mt-3 max-w-[52ch] text-muted">A menu bar version for macOS is in progress. Leave your email and we&apos;ll tell you the day it ships.</p>
+              <p className="mb-6 mt-3 max-w-[52ch] text-muted">
+                A menu bar version for macOS is in the works. An early preview is in the{" "}
+                <a href={`${REPO_URL}/releases/latest`} className="font-medium text-accent underline underline-offset-4">latest release</a>
+                {" "}if you want to try it. Leave your email and we&apos;ll tell you when the stable version ships.
+              </p>
               <WaitlistForm />
             </Reveal>
           </div>

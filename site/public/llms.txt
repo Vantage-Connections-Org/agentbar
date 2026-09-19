@@ -7,7 +7,7 @@
 - Clicking a square brings that chat's window (Zed, Windows Terminal, VS Code, Cursor, and others) to the front.
 - It reads only local files the tools already keep (~/.claude/sessions, ~/.claude/projects, ~/.codex). No API keys, no network requests, never modifies those files.
 - Install: download AgentBar-windows-x64.zip from https://github.com/Vantage-Connections-Org/agentbar/releases/latest , unzip, run AgentBar.exe (self-contained, no .NET install needed). Or build from source with install.ps1 (requires the .NET 8 SDK).
-- A macOS menu bar version is in progress (not yet available).
+- A macOS menu bar version is available as an early preview in the latest GitHub release (lightly tested). No Linux version.
 
 ## Links
 - [Source code and README](https://github.com/Vantage-Connections-Org/agentbar)

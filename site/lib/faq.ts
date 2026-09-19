@@ -19,7 +19,7 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "Is there a Mac or Linux version?",
-    a: "Not yet. AgentBar is Windows 10 and 11 only today. A macOS menu bar version is in progress; join the waitlist on this page to get an email when it ships.",
+    a: "Windows 10 and 11 are fully supported. A macOS menu bar version is available as an early, lightly tested preview in the latest GitHub release; join the waitlist on this page to get an email when the stable version ships. There is no Linux version.",
   },
   {
     q: "How do I install it?",
