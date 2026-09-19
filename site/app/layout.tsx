@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { DESCRIPTION, REPO_URL, SITE_URL, TITLE } from "@/lib/site";
+import { DESCRIPTION, DOWNLOAD_URL, REPO_URL, SITE_URL, TITLE } from "@/lib/site";
 import { FAQ } from "@/lib/faq";
 import "./globals.css";
 
@@ -45,7 +45,7 @@ const jsonLd = [
     applicationCategory: "DeveloperApplication",
     operatingSystem: "Windows 10, Windows 11",
     url: SITE_URL,
-    downloadUrl: REPO_URL,
+    downloadUrl: DOWNLOAD_URL,
     softwareHelp: `${REPO_URL}#readme`,
     license: "https://opensource.org/licenses/MIT",
     isAccessibleForFree: true,

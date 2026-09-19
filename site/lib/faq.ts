@@ -23,7 +23,7 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How do I install it?",
-    a: "Clone the GitHub repository and run install.ps1. It builds a single small AgentBar.exe with the .NET 8 SDK, adds a Start menu shortcut, and can start it with Windows. uninstall.ps1 removes everything.",
+    a: "Download AgentBar-windows-x64.zip from the latest GitHub release, unzip it anywhere and run AgentBar.exe. Nothing else needs installing. You can also build it from source: clone the repository and run install.ps1, which needs the .NET 8 SDK.",
   },
   {
     q: "Is AgentBar free?",

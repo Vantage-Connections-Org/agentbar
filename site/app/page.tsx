@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { AppleLogo, ArrowRight, CursorClick, GithubLogo, HardDrives, Plugs, Star, WindowsLogo } from "@phosphor-icons/react/dist/ssr";
+import { AppleLogo, ArrowRight, DownloadSimple, CursorClick, GithubLogo, HardDrives, Plugs, Star, WindowsLogo } from "@phosphor-icons/react/dist/ssr";
 import { CopyButton } from "@/components/CopyButton";
 import { Reveal } from "@/components/Reveal";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { FAQ } from "@/lib/faq";
-import { REPO_URL, githubStars } from "@/lib/site";
+import { DOWNLOAD_URL, REPO_URL, githubStars } from "@/lib/site";
 
 const INSTALL = `git clone ${REPO_URL}
 cd agentbar
@@ -63,11 +63,11 @@ export default async function Home() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
-                href="#install"
+                href={DOWNLOAD_URL}
                 className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 font-medium text-accent-ink transition hover:brightness-110 active:scale-[0.98]"
               >
                 <WindowsLogo size={20} weight="fill" />
-                Install for Windows
+                Download for Windows
               </a>
               <a
                 href={REPO_URL}
@@ -183,18 +183,25 @@ export default async function Home() {
         <section id="install" className="scroll-mt-20 bg-[#101113] text-zinc-100">
           <div className="mx-auto grid max-w-6xl gap-10 px-4 py-24 sm:px-6 lg:grid-cols-2 lg:items-center">
             <Reveal>
-              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Install in a minute.</h2>
+              <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">Download, unzip, run.</h2>
               <p className="mt-3 max-w-[48ch] text-zinc-400">
-                Needs Windows 10 or 11 and the .NET 8 SDK (<code className="font-mono text-zinc-300">winget install Microsoft.DotNet.SDK.8</code>). Run this in PowerShell:
+                One zip for Windows 10 and 11. No installer and nothing else to install. Your chats show up in the taskbar right away.
               </p>
-              <p className="mt-6 text-sm text-zinc-400">
-                It builds a small AgentBar.exe, adds a Start menu shortcut and starts it with Windows. <code className="font-mono text-zinc-300">uninstall.ps1</code> removes it all.
+              <a
+                href={DOWNLOAD_URL}
+                className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#4ade80] px-5 py-3 font-medium text-[#0b2415] transition hover:brightness-110 active:scale-[0.98]"
+              >
+                <DownloadSimple size={20} weight="bold" />
+                Download AgentBar.zip
+              </a>
+              <p className="mt-4 max-w-[52ch] text-sm text-zinc-400">
+                The app isn&apos;t code-signed yet, so Windows SmartScreen may ask first: choose More info, then Run anyway. Right-click the tray goat for Start with Windows.
               </p>
             </Reveal>
             <Reveal delay={0.08}>
               <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#18191c]">
                 <div className="flex items-center justify-between border-b border-white/10 px-4 py-2.5">
-                  <span className="text-xs text-zinc-400">PowerShell</span>
+                  <span className="text-xs text-zinc-400">Or build from source (needs the .NET 8 SDK)</span>
                   <CopyButton text={INSTALL} />
                 </div>
                 <pre className="overflow-x-auto p-4 font-mono text-sm leading-relaxed text-zinc-200">{INSTALL}</pre>

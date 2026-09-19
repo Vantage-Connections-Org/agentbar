@@ -2,6 +2,8 @@
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://agentbar.vercel.app";
 export const REPO = "Vantage-Connections-Org/agentbar";
 export const REPO_URL = `https://github.com/${REPO}`;
+// Always the newest release's Windows zip (self-contained, no .NET install needed).
+export const DOWNLOAD_URL = `${REPO_URL}/releases/latest/download/AgentBar-windows-x64.zip`;
 
 export const TITLE = "AgentBar: see every Claude Code and Codex chat in your taskbar";
 export const DESCRIPTION =
