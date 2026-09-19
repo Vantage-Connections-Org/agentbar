@@ -133,15 +133,21 @@ export default function Home() {
                 <CursorClick size={28} className="text-accent" />
                 <h3 className="mt-4 text-lg font-semibold">Click a square, land in that chat&apos;s window</h3>
                 <p className="mt-2 text-muted">Works with Zed, Windows Terminal, VS Code, Cursor and more. Drag squares to reorder them.</p>
-                {/* Real screen recording of dragging a square (docs/demo-drag.gif) */}
-                <img
-                  src="/demo-drag.gif"
-                  alt="Dragging a chat square along the AgentBar row: it lights up while held and drops into a new position"
+                {/* Real screen recording of dragging a square (same clip as docs/demo-drag.gif, as a ~30KB video) */}
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="none"
                   width={1000}
                   height={120}
-                  loading="lazy"
+                  aria-label="Dragging a chat square along the AgentBar row: it lights up while held and drops into a new position"
                   className="mt-auto h-auto w-full rounded-lg pt-5"
-                />
+                >
+                  <source src="/demo-drag.webm" type="video/webm" />
+                  <source src="/demo-drag.mp4" type="video/mp4" />
+                </video>
               </div>
             </Reveal>
             <Reveal delay={0.1} className="md:col-span-3">
