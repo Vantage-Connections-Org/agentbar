@@ -1,10 +1,12 @@
 import Image from "next/image";
-import { AppleLogo, ArrowRight, DownloadSimple, CursorClick, GithubLogo, HardDrives, Plugs, Star, WindowsLogo } from "@phosphor-icons/react/dist/ssr";
+import { AppleLogo, ArrowRight, DownloadSimple, CursorClick, GithubLogo, HardDrives, Plugs, WindowsLogo } from "@phosphor-icons/react/dist/ssr";
 import { CopyButton } from "@/components/CopyButton";
+import { DownloadButton } from "@/components/DownloadButton";
 import { Reveal } from "@/components/Reveal";
 import { WaitlistForm } from "@/components/WaitlistForm";
 import { FAQ } from "@/lib/faq";
-import { DOWNLOAD_URL, REPO_URL, githubStars } from "@/lib/site";
+import { DOWNLOAD_URL, REPO_URL } from "@/lib/site";
+import { SiteFooter, SiteHeader } from "@/components/SiteChrome";
 
 const INSTALL = `git clone ${REPO_URL}
 cd agentbar
@@ -18,37 +20,10 @@ const STATES = [
   { name: "Idle", note: "Shrinks to a thin bar.", bg: "#262626", border: "#F06BB8", idle: true },
 ];
 
-export default async function Home() {
-  const stars = await githubStars();
-
+export default function Home() {
   return (
     <>
-      <header className="sticky top-0 z-20 border-b border-line/70 bg-bg/80 backdrop-blur">
-        <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <a href="#" className="flex items-center gap-2.5 font-semibold tracking-tight">
-            <Image src="/goat-head.png" alt="" width={30} height={30} priority />
-            AgentBar
-          </a>
-          <div className="flex items-center gap-1 text-sm sm:gap-2">
-            <a href="#how" className="hidden rounded-lg px-3 py-2 text-muted transition hover:text-text sm:block">How it works</a>
-            <a href="#install" className="hidden rounded-lg px-3 py-2 text-muted transition hover:text-text sm:block">Install</a>
-            <a href="#faq" className="hidden rounded-lg px-3 py-2 text-muted transition hover:text-text md:block">FAQ</a>
-            <a
-              href={REPO_URL}
-              className="ml-1 inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-2 font-medium transition hover:border-muted active:scale-[0.98]"
-            >
-              <GithubLogo size={18} weight="fill" />
-              <span className="hidden sm:inline">GitHub</span>
-              {stars !== null && (
-                <span className="inline-flex items-center gap-1 text-muted">
-                  <Star size={14} weight="fill" />
-                  {stars}
-                </span>
-              )}
-            </a>
-          </div>
-        </nav>
-      </header>
+      <SiteHeader />
 
       <main>
         {/* Hero */}
@@ -62,13 +37,7 @@ export default async function Home() {
               AgentBar shows each running Claude Code and Codex chat as a square in your Windows taskbar. Click one to jump to it.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href={DOWNLOAD_URL}
-                className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 font-medium text-accent-ink transition hover:brightness-110 active:scale-[0.98]"
-              >
-                <WindowsLogo size={20} weight="fill" />
-                Download for Windows
-              </a>
+              <DownloadButton className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 font-medium text-accent-ink transition hover:brightness-110 active:scale-[0.98]" />
               <a
                 href={REPO_URL}
                 className="inline-flex items-center gap-2 rounded-xl border border-line bg-surface px-5 py-3 font-medium transition hover:border-muted active:scale-[0.98]"
@@ -255,19 +224,7 @@ export default async function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-line">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <p className="flex items-center gap-2">
-            <Image src="/goat-head.png" alt="" width={22} height={22} />
-            AgentBar is free and MIT licensed. Not affiliated with Anthropic or OpenAI.
-          </p>
-          <div className="flex gap-5">
-            <a href={REPO_URL} className="hover:text-text">GitHub</a>
-            <a href={`${REPO_URL}/issues`} className="hover:text-text">Report an issue</a>
-            <a href="#mac" className="hover:text-text">Mac waitlist</a>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }
