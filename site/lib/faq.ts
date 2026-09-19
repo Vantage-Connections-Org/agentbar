@@ -18,6 +18,10 @@ export const FAQ: { q: string; a: string }[] = [
     a: "AgentBar brings that chat's window to the front: Zed, Windows Terminal, VS Code, Cursor and similar apps. If several chats share one editor window, it opens that window and you pick the tab.",
   },
   {
+    q: "Can AgentBar notify me when a chat finishes?",
+    a: "Yes. On Windows, AgentBar shows a notification naming the chat when it goes from working to done and is waiting on you. It is on by default; turn it off with the 'Notify when a chat finishes' switch in the right-click menu.",
+  },
+  {
     q: "Is there a Mac or Linux version?",
     a: "Windows 10 and 11 are fully supported. A macOS menu bar version is available as an early, lightly tested preview in the latest GitHub release; join the waitlist on this page to get an email when the stable version ships. There is no Linux version.",
   },
