@@ -48,6 +48,7 @@ export function SiteFooter() {
           <div className="flex gap-5">
             <a href={REPO_URL} className="hover:text-text">GitHub</a>
             <a href={`${REPO_URL}/issues`} className="hover:text-text">Report an issue</a>
+            <a href="/guides" className="hover:text-text">Guides</a>
             <a href="/#mac" className="hover:text-text">Mac waitlist</a>
           </div>
         </div>

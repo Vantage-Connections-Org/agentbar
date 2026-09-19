@@ -10,6 +10,12 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/Vantage-Connections-Org/agentbar/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/Vantage-Connections-Org/agentbar?color=38845C"></a>
+  <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/github/license/Vantage-Connections-Org/agentbar?color=38845C"></a>
+  <img alt="Windows 10/11" src="https://img.shields.io/badge/Windows-10%20%7C%2011-38845C">
+</p>
+
+<p align="center">
   <a href="https://github.com/Vantage-Connections-Org/agentbar/releases/latest/download/AgentBar-windows-x64.zip"><b>Download for Windows</b></a>
   &nbsp;·&nbsp;
   <a href="https://getagentbar.vercel.app">Website</a>

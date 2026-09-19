@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { AppleLogo, ArrowRight, DownloadSimple, CursorClick, GithubLogo, HardDrives, Plugs, WindowsLogo } from "@phosphor-icons/react/dist/ssr";
+import { AppleLogo, ArrowRight, DownloadSimple, CursorClick, GithubLogo, HardDrives, Plugs } from "@phosphor-icons/react/dist/ssr";
 import { CopyButton } from "@/components/CopyButton";
 import { DownloadButton } from "@/components/DownloadButton";
 import { Reveal } from "@/components/Reveal";
