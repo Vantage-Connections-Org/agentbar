@@ -9,7 +9,7 @@ export async function SiteHeader() {
       <header className="sticky top-0 z-20 border-b border-line/70 bg-bg/80 backdrop-blur">
         <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <a href="/" className="flex items-center gap-2.5 font-semibold tracking-tight">
-            <Image src="/goat-head.png" alt="" width={30} height={30} priority />
+            <Image src="/goat-head.png" alt="" width={30} height={30} preload />
             AgentBar
           </a>
           <div className="flex items-center gap-1 text-sm sm:gap-2">
