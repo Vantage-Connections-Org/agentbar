@@ -27,6 +27,18 @@ sealed class Tray : IDisposable
             : System.Drawing.Icon.ExtractAssociatedIcon(Environment.ProcessPath);
     }
 
+    /// One-time hello on first launch: a new user otherwise gets no sign it's running,
+    /// and Windows tucks new tray icons into the ^ overflow.
+    public void WelcomeOnce()
+    {
+        string flag = Path.Combine(AppContext.BaseDirectory, "welcomed");
+        if (File.Exists(flag)) return;
+        _icon.ShowBalloonTip(10000, "AgentBar is running",
+            "Your Claude Code and Codex chats show up as squares next to the tray. Click the goat to hide or show the bar; right-click it for Start with Windows.",
+            Forms.ToolTipIcon.None);
+        try { File.WriteAllText(flag, ""); } catch { }
+    }
+
     public void Update(string summary, bool hidden)
     {
         string text = "AgentBar: " + summary + (hidden ? " (bar hidden)" : "");

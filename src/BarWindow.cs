@@ -89,7 +89,7 @@ class BarWindow : Window
             Native.SetWindowLong(_hwnd, Native.GWL_EXSTYLE,
                 Native.GetWindowLong(_hwnd, Native.GWL_EXSTYLE) | Native.WS_EX_TOOLWINDOW); // hide from Alt+Tab
         };
-        Loaded += (_, _) => { Refresh(); Reposition(); };
+        Loaded += (_, _) => { Refresh(); Reposition(); _tray.WelcomeOnce(); };
         SizeChanged += (_, _) => Reposition();
         ContextMenuOpening += (_, e) => { e.Handled = true; ShowMenuAtCursor(); }; // same menu as the tray, placed above the taskbar
         _tray = new Tray(this);
