@@ -12,7 +12,7 @@ Your Claude Code and Codex chats, in the Windows taskbar
 
 ## Links
 
-- Website: {{SITE_URL}}
+- Website: https://getagentbar.vercel.app
 - GitHub: https://github.com/Vantage-Connections-Org/agentbar
 
 ## Pricing

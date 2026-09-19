@@ -10,7 +10,7 @@ Show HN: AgentBar – Claude Code and Codex chat status in the Windows taskbar
 
 https://github.com/Vantage-Connections-Org/agentbar
 
-(Link the repo, not {{SITE_URL}}. HN readers want the code first. Put {{SITE_URL}} in the comment instead.)
+(Link the repo, not https://getagentbar.vercel.app. HN readers want the code first. Put https://getagentbar.vercel.app in the comment instead.)
 
 ## First comment (post right after submitting)
 
@@ -47,6 +47,6 @@ Limitations, honestly:
 It's free and MIT licensed. Not affiliated with Anthropic or OpenAI.
 
 Repo: https://github.com/Vantage-Connections-Org/agentbar
-Page: {{SITE_URL}}
+Page: https://getagentbar.vercel.app
 
 I'd like feedback on two things in particular: whether discovery breaks with your setup (different terminal, WSL, remote sessions, multiple monitors), and whether there's a less hacky way to sit in the Windows 11 taskbar than a taskbar-owned window. Bug reports with your terminal/editor name are very welcome.

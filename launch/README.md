@@ -11,7 +11,7 @@ Drafts only. Nothing in this folder has been posted anywhere.
 
 ## Before posting anything
 
-- [ ] Replace every `{{SITE_URL}}` with the real landing page URL (`grep -rn "{{SITE_URL}}" launch/`).
+- [ ] Replace every `https://getagentbar.vercel.app` with the real landing page URL (`grep -rn "https://getagentbar.vercel.app" launch/`).
 - [ ] Repo is public and the README renders with all four `docs/` images.
 - [ ] Fresh-machine test of the README install: `git clone`, `.\install.ps1 -StartWithWindows`, a Claude Code chat and a Codex chat both show up, click-to-focus works. Launch traffic will hit the install first.
 - [ ] Decide on a prebuilt `AgentBar.exe` in GitHub Releases. Right now every draft says "build from source with the .NET 8 SDK". If you add a release, update that line in all four files.
@@ -77,3 +77,17 @@ Keep replies in comments inside these lines too.
 - Session files aren't public APIs; upstream changes can break discovery.
 
 Do not add user counts, star counts, testimonials, or performance numbers that haven't been measured.
+
+## Images (launch/images/)
+
+Composed only from real screenshots and the real icon.
+
+| File | Size | Use |
+|---|---|---|
+| `ph-1-hero.png` | 1270x760 | Product Hunt gallery 1 |
+| `ph-2-hover.png` | 1270x760 | Product Hunt gallery 2 |
+| `ph-3-states.png` | 1270x760 | Product Hunt gallery 3 |
+| `ph-thumbnail-240.png` | 240x240 | Product Hunt thumbnail |
+| `x-1200x675.png` | 1200x675 | X post / Reddit image post |
+
+The site's own link preview (Open Graph, 1200x630) is generated from the same assets, so links to https://getagentbar.vercel.app unfurl with a real image.

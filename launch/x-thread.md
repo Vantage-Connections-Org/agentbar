@@ -66,7 +66,7 @@ Limits: Windows 10/11 only, taskbar at the bottom, build from source with .NET 8
 A macOS menu-bar version is in progress.
 
 github.com/Vantage-Connections-Org/agentbar
-{{SITE_URL}}
+https://getagentbar.vercel.app
 
 ---
 
