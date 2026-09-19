@@ -1,19 +1,13 @@
-"use client";
-import { motion, useReducedMotion } from "motion/react";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
-/** Fades a section in as it scrolls into view, so each part of the story arrives in order. */
+/** Fades a section in as it scrolls into view, with a CSS scroll-driven animation
+ *  (see .reveal in globals.css). No JavaScript: content is visible by default and only
+ *  animates in browsers that support animation-timeline, unless reduced motion is on. */
 export function Reveal({ children, delay = 0, className }: { children: ReactNode; delay?: number; className?: string }) {
-  const reduce = useReducedMotion();
+  const style = delay ? ({ "--reveal-delay": `${Math.round(delay * 100)}%` } as CSSProperties) : undefined;
   return (
-    <motion.div
-      className={className}
-      initial={reduce ? false : { opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] }}
-    >
+    <div className={className ? `reveal ${className}` : "reveal"} style={style}>
       {children}
-    </motion.div>
+    </div>
   );
 }

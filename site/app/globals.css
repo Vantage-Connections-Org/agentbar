@@ -59,3 +59,18 @@ body {
     scroll-behavior: auto;
   }
 }
+
+/* Scroll reveal (components/Reveal.tsx): progressive enhancement, no JS. */
+@keyframes reveal-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: none; }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry calc(var(--reveal-delay, 0%)) entry calc(55% + var(--reveal-delay, 0%));
+    }
+  }
+}
