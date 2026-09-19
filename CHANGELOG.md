@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.1.3 (2026-09-19)
 
 - macOS preview: a notification when a chat finishes (same as Windows). Asks for notification permission on first launch.
 
