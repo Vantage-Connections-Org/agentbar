@@ -1,0 +1,46 @@
+name: mac-live
+
+# Manual check of the macOS app against a REAL Claude Code process on the runner:
+# starts `claude` (unauthenticated, in a pseudo-terminal), runs AgentBar, and
+# screenshots the menu bar. Shows whether a live session is discovered and drawn.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Build AgentBar.app
+        run: bash mac/build-app.sh
+      - name: Start a real Claude Code process
+        run: |
+          set -x
+          npm install -g @anthropic-ai/claude-code
+          mkdir -p ~/work && cd ~/work
+          # `script` gives claude a pseudo-terminal so it starts its interactive UI.
+          nohup script -q /dev/null claude > ~/claude.log 2>&1 &
+          sleep 20
+          ls -la ~/.claude/sessions || echo "no sessions dir"
+          cat ~/.claude/sessions/*.json 2>/dev/null | head -c 2000 || true
+          pgrep -fl claude || true
+      - name: Run AgentBar and screenshot the menu bar
+        run: |
+          ./mac/build/AgentBar.app/Contents/MacOS/AgentBar > agentbar.log 2>&1 &
+          sleep 10
+          screencapture -x live-menubar.png || true
+          cat agentbar.log || true
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: mac-live
+          path: |
+            live-menubar.png
+            ~/claude.log
+          if-no-files-found: ignore
