@@ -26,7 +26,6 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
   },
   twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION },
-  icons: { icon: "/goat-head.png", apple: "/goat.png" },
 };
 
 export const viewport: Viewport = {
