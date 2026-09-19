@@ -1,5 +1,6 @@
 import AppKit
 import SwiftUI
+import UserNotifications
 
 /// Polls Discovery, applies the same state machine as BarWindow.Effective() on Windows,
 /// and keeps the menu bar image in sync.
@@ -18,10 +19,12 @@ final class Store: ObservableObject {
     private var known = Set<String>()   // chats seen this run
     private var signature = "\u{0}"
     private var timer: Timer?
+    private var lastStates: [String: String]? // nil until the first scan, so startup never notifies
 
     init() {
         seen = Persist.load([String: Int64].self, "seen.json") ?? [:]
         order = Persist.load([String].self, "order.json") ?? []
+        Notifier.requestPermission()
         refresh()
         let t = Timer(timeInterval: 1.0, repeats: true) { [weak self] _ in self?.refresh() }
         RunLoop.main.add(t, forMode: .common)
@@ -48,6 +51,11 @@ final class Store: ObservableObject {
         var st: [String: String] = [:]
         for s in found { st[s.key] = effective(s) }
         known.formUnion(st.keys)
+        // Notify when a chat goes from working to done while AgentBar is watching.
+        if let last = lastStates {
+            for s in found where st[s.key] == "waiting" && last[s.key] == "working" { Notifier.finished(s) }
+        }
+        lastStates = st
 
         var added = false
         for s in found where !order.contains(s.key) { order.insert(s.key, at: 0); added = true } // new chats join on the left
@@ -133,5 +141,25 @@ enum HostFocus {
         guard pid > 0, let app = NSRunningApplication(processIdentifier: pid) else { return }
         if app.isHidden { app.unhide() }
         app.activate(options: [.activateIgnoringOtherApps])
+    }
+}
+
+/// Finish notifications. Only inside a real .app bundle: UNUserNotificationCenter
+/// crashes in a bare binary (e.g. `swift run`), so it's skipped there.
+enum Notifier {
+    static var available: Bool { Bundle.main.bundleIdentifier != nil && Bundle.main.bundleURL.pathExtension == "app" }
+
+    static func requestPermission() {
+        guard available else { return }
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+    }
+
+    static func finished(_ s: Session) {
+        guard available else { return }
+        let content = UNMutableNotificationContent()
+        content.title = "Chat finished"
+        content.body = "(s.name) ((s.tool == "codex" ? "Codex" : "Claude Code")) is waiting on you."
+        let request = UNNotificationRequest(identifier: "finished-(s.key)-(s.since)", content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(request)
     }
 }
