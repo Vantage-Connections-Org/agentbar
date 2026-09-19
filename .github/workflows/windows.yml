@@ -1,0 +1,32 @@
+name: windows
+
+# Build check on every change to the Windows app, so a broken build is caught before a release tag.
+on:
+  push:
+    branches: [main]
+    paths: ["src/**", ".github/workflows/windows.yml"]
+  pull_request:
+    paths: ["src/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Build
+        run: dotnet build src/AgentBar.csproj -c Release -warnaserror:false
+      - name: Smoke test (--who exits cleanly)
+        shell: pwsh
+        run: |
+          dotnet publish src/AgentBar.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o out
+          $p = Start-Process out/AgentBar.exe -ArgumentList "--who", "$PID" -NoNewWindow -Wait -PassThru -RedirectStandardOutput who.json
+          Get-Content who.json
+          if ($p.ExitCode -ne 0) { throw "AgentBar --who exited with $($p.ExitCode)" }
+          Get-Content who.json | ConvertFrom-Json | Out-Null
