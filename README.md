@@ -154,6 +154,8 @@ Practical notes for running several agents at once, on the website:
 - [How to run multiple Claude Code sessions on Windows](https://getagentbar.vercel.app/guides/run-multiple-claude-code-sessions)
 - [How to get notified when Claude Code is done](https://getagentbar.vercel.app/guides/know-when-claude-code-is-done)
 - [How to track multiple Codex CLI sessions](https://getagentbar.vercel.app/guides/track-codex-cli-sessions)
+- [Claude Code hooks on Windows: a practical intro](https://getagentbar.vercel.app/guides/claude-code-hooks-on-windows)
+- [Claude Code vs Codex CLI: how sessions work](https://getagentbar.vercel.app/guides/claude-code-vs-codex-cli-sessions)
 
 ## Limitations
 
