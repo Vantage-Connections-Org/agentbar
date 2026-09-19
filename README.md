@@ -63,6 +63,13 @@ One square per chat, sitting in the empty part of your taskbar next to the tray.
 
 **[Download AgentBar for Windows](https://github.com/Vantage-Connections-Org/agentbar/releases/latest/download/AgentBar-windows-x64.zip)** (Windows 10/11, taskbar at the bottom). Unzip it anywhere, ideally `%LOCALAPPDATA%AgentBar`, and run `AgentBar.exe`. Nothing else to install. The exe isn't code-signed yet, so SmartScreen may ask first: choose *More info*, then *Run anyway*. Right-click the tray goat and turn on *Start with Windows*.
 
+With [Scoop](https://scoop.sh) (new, not yet tested on a clean machine):
+
+```powershell
+scoop bucket add agentbar https://github.com/Vantage-Connections-Org/agentbar
+scoop install agentbar
+```
+
 On a Mac? A menu bar preview is in the [latest release](https://github.com/Vantage-Connections-Org/agentbar/releases/latest) (untested so far, feedback welcome), and you can [join the waitlist](https://getagentbar.vercel.app/#mac) for the stable version.
 
 ### Build from source
