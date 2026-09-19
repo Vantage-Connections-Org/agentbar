@@ -32,7 +32,7 @@ There's an optional hook (SessionStart / PreToolUse / PostToolUse / Notification
 
 Small tip from the README: `/color` works as a starting prompt, so a PowerShell function that runs `claude "/color <random>"` gives every chat its own colour and the border picks it up.
 
-Limits: Windows 10/11 only, taskbar at the bottom. Clicking focuses the window, not the specific terminal tab. It reads files Claude Code keeps for itself, which aren't a public API, so an update could break it. You build it from source with the .NET 8 SDK (`install.ps1` does it). A macOS menu-bar version is in progress, not out yet.
+Limits: Windows 10/11 (Mac is an early preview), taskbar at the bottom. Clicking focuses the window, not the specific terminal tab. It reads files Claude Code keeps for itself, which aren't a public API, so an update could break it. You build it from source with the .NET 8 SDK (`install.ps1` does it). A macOS menu-bar version is in progress, not out yet.
 
 Also works with Codex chats if you use both.
 
@@ -66,7 +66,7 @@ How it tracks Codex without any API:
 
 It never writes to Codex's files. An optional hook in `~/.codex/hooks.json` (SessionStart + PostToolUse, Codex asks you to trust it once) adds the current step to the hover card.
 
-Limits: Windows 10/11 only, bottom taskbar. It focuses the window, not the terminal tab. The lock/rollout files aren't a public interface, so a Codex update could break detection. Build from source with the .NET 8 SDK. A macOS menu-bar version is in progress, not released.
+Limits: Windows 10/11 (Mac is an early preview), bottom taskbar. It focuses the window, not the terminal tab. The lock/rollout files aren't a public interface, so a Codex update could break detection. Build from source with the .NET 8 SDK. A macOS menu-bar version is in progress, not released.
 
 https://github.com/Vantage-Connections-Org/agentbar
 
