@@ -10,6 +10,14 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/Vantage-Connections-Org/agentbar/releases/latest/download/AgentBar-windows-x64.zip"><b>Download for Windows</b></a>
+  &nbsp;·&nbsp;
+  <a href="https://getagentbar.vercel.app">Website</a>
+  &nbsp;·&nbsp;
+  <a href="https://getagentbar.vercel.app/#mac">Mac waitlist</a>
+</p>
+
+<p align="center">
   <img src="docs/taskbar.png" alt="AgentBar in the Windows 11 taskbar, left of the system tray">
 </p>
 
@@ -50,7 +58,13 @@ One square per chat, sitting in the empty part of your taskbar next to the tray.
 
 ## Install
 
-Requires Windows 10/11 with the taskbar at the bottom, and the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) to build (`winget install Microsoft.DotNet.SDK.8`).
+**[Download AgentBar for Windows](https://github.com/Vantage-Connections-Org/agentbar/releases/latest/download/AgentBar-windows-x64.zip)** (Windows 10/11, taskbar at the bottom). Unzip it anywhere, ideally `%LOCALAPPDATA%AgentBar`, and run `AgentBar.exe`. Nothing else to install. The exe isn't code-signed yet, so SmartScreen may ask first: choose *More info*, then *Run anyway*. Right-click the tray goat and turn on *Start with Windows*.
+
+On a Mac? A menu bar preview is in the [latest release](https://github.com/Vantage-Connections-Org/agentbar/releases/latest) (untested so far, feedback welcome), and you can [join the waitlist](https://getagentbar.vercel.app/#mac) for the stable version.
+
+### Build from source
+
+Needs the [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0) (`winget install Microsoft.DotNet.SDK.8`).
 
 ```powershell
 git clone https://github.com/Vantage-Connections-Org/agentbar
@@ -119,7 +133,7 @@ function c {
 
 ## Limitations
 
-- **Windows only**, with the taskbar at the bottom of the primary monitor.
+- **Windows first**, with the taskbar at the bottom of the primary monitor. The macOS menu bar version is an untested preview.
 - **Clicking focuses the window, not the terminal tab.** If several chats share one editor window, you land in that window and pick the tab yourself. Zed has no way for other apps to switch its terminal tabs.
 - It reads files Claude Code and Codex write for their own use. Those aren't public APIs, so a future release of either tool could change them.
 
